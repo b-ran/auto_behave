@@ -1,0 +1,14 @@
+{% for function in functions %}
+    <dl class="function">
+        <dt id={{ function["title"] }}>
+            {% for decorator in function["decorators"] %}
+                {% if function["decorators"]|length > 1 and function["decorators"][0] != decorator%}
+                    <br>
+                {% endif %}
+                <code class="descname">{{ decorator }}</code>
+            {% endfor %}
+            <a class="headerlink" href="#{{ function["title"] }}" title="Link to this Step"></a>
+        </dt>
+        <dd>{{ function["docstring"] }}</dd>
+    </dl>
+{% endfor %}
