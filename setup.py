@@ -23,7 +23,7 @@ setup(
     author='Brandon Scott-Hill',
     author_email='brandon.scotthill@publons.com',
     classifiers=[
-        'Framework:: Sphinx:: Extension'
+        'Framework:: Sphinx:: Extension',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
