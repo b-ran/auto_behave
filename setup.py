@@ -1,4 +1,3 @@
-
 import os
 from setuptools import setup, find_packages
 
@@ -6,8 +5,10 @@ README = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
 
 setup(
     name='auto_behave',
-    version='0.0.1',
-    packages=find_packages(),
+    version='0.0.5',
+    packages=find_packages(
+        include=['auto_behave']
+    ),
     include_package_data=True,
     license='MIT License',
     long_description=README,
@@ -23,7 +24,6 @@ setup(
     author='Brandon Scott-Hill',
     author_email='brandon.scotthill@publons.com',
     classifiers=[
-        'Framework:: Sphinx:: Extension',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
