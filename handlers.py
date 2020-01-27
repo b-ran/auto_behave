@@ -6,15 +6,12 @@ from types import FunctionType
 
 from docutils import nodes
 from docutils.nodes import document
-from docutils.statemachine import StringList
 from sphinx.application import Sphinx
 
 from jinja2 import Template
 
-
+from auto_behave.node import AutoBehave
 import inspect
-
-from node import AutoBehave
 
 
 def process_auto_behave_nodes(app: Sphinx, doc_tree: document, from_doc_name: str):
@@ -24,21 +21,34 @@ def process_auto_behave_nodes(app: Sphinx, doc_tree: document, from_doc_name: st
     template = Template(template_string)
 
     for node in doc_tree.traverse(AutoBehave):
-        output = process_raw_source(node.rawsource, template)
+        output = process_modules(node.rawsource, template)
         node.replace_self(nodes.raw('', output, format='html'))
 
 
-def process_raw_source(raw_source: StringList, template):
-    for module_name in raw_source:
+def process_modules(modules, template: Template):
+    """
+    Process a list of modules, importing the module's step functions details
+    and templating those details into html.
+
+    :param modules: List of modules to import step functions from
+    :param template: jinja2 template, to render to imported details
+    :return: Render html string from jinja2 template
+    """
+    for module_name in modules:
         module = importlib.import_module(module_name)
 
         functions_tuples = [fn for fn in inspect.getmembers(module) if isinstance(fn[1], types.FunctionType)]
         functions = process_functions(functions_tuples)
-
         return template.render(functions=functions)
 
 
 def process_functions(functions_tuples) -> list:
+    """
+    Gets details of each function for a jinja2 template
+
+    :param functions_tuples: functions_tuples: List of functions from inspect.getmembers
+    :return:  functions_tuples: List of dicts each with details about the function: title, decorators, docstring
+    """
     functions = []
     for function_tuple in functions_tuples:
 
@@ -50,13 +60,18 @@ def process_functions(functions_tuples) -> list:
 
         functions.append({
             "title": function_tuple[0],
-            "decorators": format_decorator(source_lines),
+            "decorators": format_decorators(source_lines),
             "docstring": inspect.getdoc(function)
         })
     return functions
 
 
-def format_decorator(source_lines: list) -> list:
+def format_decorators(source_lines: list) -> list:
+    """
+    Tidies up decorators, removing unneeded syntax for docs
+    :param source_lines: Source code lines of a function
+    :return: List of tidy decorators for doc
+    """
     raw_step_decorators = [line for line in source_lines if re.match(r'@[a-z]+\(', line)]
     step_decorators = []
     for step_decorator in raw_step_decorators:
@@ -68,4 +83,9 @@ def format_decorator(source_lines: list) -> list:
 
 
 def has_decorator(source_lines: list) -> bool:
+    """
+    Checks if the source code for a function has a decorator or not
+    :param source_lines: Source code lines of a function
+    :return: True if there is a decorator else False
+    """
     return '@' in source_lines[0]
