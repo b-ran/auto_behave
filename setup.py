@@ -5,7 +5,7 @@ README = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
 
 setup(
     name='auto_behave',
-    version='0.0.5',
+    version='0.0.7',
     packages=find_packages(
         include=['auto_behave']
     ),

@@ -2,13 +2,31 @@
     <dl class="function">
         <dt id={{ function["title"] }}>
             {% for decorator in function["decorators"] %}
-                {% if function["decorators"]|length > 1 and function["decorators"][0] != decorator%}
+                {% if function["decorators"]|length > 1 and function["decorators"][0] != decorator %}
                     <br>
                 {% endif %}
                 <code class="descname">{{ decorator }}</code>
             {% endfor %}
             <a class="headerlink" href="#{{ function["title"] }}" title="Link to this Step"></a>
         </dt>
+
         <dd>{{ function["docstring"] }}</dd>
+
+        {% if function["table"]| length > 1 %}
+            <div class="wy-table-responsive" style="margin: 0 0 12px 24px">
+                <table class="docutils align-default">
+                    <tbody>
+                    {% for row in function["table"] %}
+                        <tr>
+                            {% for col in row %}
+                                <td><p>{{ col }}</p></td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+
     </dl>
 {% endfor %}

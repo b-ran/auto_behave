@@ -58,12 +58,57 @@ def process_functions(functions_tuples) -> list:
         if not has_decorator(source_lines):
             continue
 
+        docstring = inspect.getdoc(function)
+
+        if docstring is None:
+            functions.append({
+                "title": function_tuple[0],
+                "decorators": format_decorators(source_lines),
+                "table": [],
+                "docstring": ''
+            })
+            continue
+
+        docstring_lines = docstring.split('\n')
+        table_lines = get_table_lines(docstring_lines)
+        docstring_filtered = filter_table(docstring_lines)
+
         functions.append({
             "title": function_tuple[0],
             "decorators": format_decorators(source_lines),
-            "docstring": inspect.getdoc(function)
+            "table": format_table(table_lines),
+            "docstring": docstring_filtered
         })
     return functions
+
+
+def filter_table(docstring_lines):
+    for i, line in enumerate(docstring_lines):
+        if re.match(r'(\+.*|\|.*)', line):
+            return ' '.join(docstring_lines[0:i])
+    return ' '.join(docstring_lines)
+
+
+def get_table_lines(docstring_lines: list) -> list:
+    docstring_lines = [line.strip() for line in docstring_lines]
+    table_lines = [line for line in docstring_lines if re.match(r'\|.*', line)]
+    return table_lines
+
+
+def format_table(table_lines: list):
+    """
+    Find and format table with the docstring
+
+    :param table_lines: Docstring containing a table within
+    """
+    tidy_table_lines = [line[1:-1].split('|') for line in table_lines]
+    table = []
+    for row in tidy_table_lines:
+        cols = []
+        for col in row:
+            cols.append(col.strip())
+        table.append(cols)
+    return table
 
 
 def format_decorators(source_lines: list) -> list:

@@ -106,7 +106,7 @@ def _create_step_doc_folder(doc_path: str):
     Path(f'{doc_path}/steps').mkdir(parents=True, exist_ok=True)
 
 
-def generate_docs(project_path: str, behave_path: str, doc_path: str):
+def generate_step_rst_files(project_path: str, behave_path: str, doc_path: str):
     """
     Generates rst files for behave step files.
 

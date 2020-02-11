@@ -17,8 +17,8 @@ To enable auto behave's rst generation modify :code:`conf.py` by adding the foll
 
 .. code-block:: python
 
-    from auto_behave.gen_step_rst import generate_docs
-    generate_docs('abs/path/to/project', 'rel/path/features/dir', 'rel/path/doc/features')
+    from auto_behave.gen_step_rst import generate_step_rst_files
+    generate_step_rst_files('abs/path/to/project', 'rel/path/features/dir', 'rel/path/doc/features')
 
 File Layout
 -----------
